@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>APL Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="script.js"></script>
+    <style>
+        /* Add font styling */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+
+        p {
+            font-size: 18px;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        /* Add logo */
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            max-width: 80%;
+            height: auto;
+        }
+
+        /* Camera Stream Container */
+        .camera-stream {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .camera-stream img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+       
+        /* Reserve a Spot Container */
+        .reserve-spot {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .reserve-spot label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .reserve-spot select,
+        .reserve-spot input[type="time"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .reserve-spot button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .reserve-spot button:hover {
+            background-color: #45a049;
+        }
+
+        /* Ticket Display */
+        #ticket {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        #ticket p {
+            margin-bottom: 10px;
+        }
+
+        #ticket span {
+            font-weight: bold;
+        }
+
+        /* Display Available Spots */
+        #availableSpots {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+        }
+
+        .container {
+            position: absolute;
+            left: 404px;
+            top: 570px;
+        }
+        .image2 {
+            position: absolute;
+            left: 400px;
+            top: 610px;
+            transform: rotate(270deg);
+        }
+        .parkstate-container {
+            position: absolute;
+            left: 100px;
+            top: 570px;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <img src="logo.png" alt="error" height="200px" width="200px">
+    </div>
+    <div class="camera-stream">
+        <h2>Camera Stream</h2>
+        <!-- Insert your camera stream here -->
+        <img src="camera-stream.jpg" height="600px" width="600px" alt="error">
+    </div>
+
+    <div class="filler" style="text-align: center;">
+        <img src="frame.jpg" alt="error" height="500px" width="500px">
+    </div>
+    <div class="container"">
+        <img src="parking-base-image.png" alt="error" height="500px" width="500px">
+    </div>
+    <div class="image2">
+        <img src="car-image.png" alt="error" height="150px" width="200px">
+    </div>
+    <div id="availableSpots">
+        <h2>Available Spots</h2>
+        <p id="spotsCount">6</p>
+    </div>
+
+
+    <div class="topnav">
+        <h1>APL Parking Lot</h1>
+        <p>Easy Parking</p>
+    </div>
+        <!-- Reserve a Spot Container -->
+        <div class="reserve-spot">
+            <h2>Reserve a Spot</h2>
+            <div>
+                <label for="spot">Spot:</label>
+                <select id="spot">
+                    <option value="1">Spot 1</option>
+                    <option value="2">Spot 2</option>
+                    <option value="3">Spot 3</option>
+                    <option value="4">Spot 4</option>
+                    <option value="5">Spot 5</option>
+                    <option value="6">Spot 6</option>
+                </select>
+            </div>
+            <div>
+                <label for="startTime">Start Time:</label>
+                <input type="time" id="startTime">
+            </div>
+            <div>
+                <label for="endTime">End Time:</label>
+                <input type="time" id="endTime">
+            </div>
+            <div>
+                <label for="timeLeft">Time Left:</label>
+                <input type="text" id="timeLeft" disabled>
+            </div>
+            <div>
+                <button onclick="reserveSpot()">Reserve Spot</button>
+                <button id="cancelButton" onclick="cancelReservation()">Cancel Reservation</button>
+                <button id="confirmButton" onclick="confirmReservation()">Confirm Reservation</button>
+                <button id="newReservationButton" style="display: none;" onclick="startNewReservation()">New Reservation</button>
+            </div>
+        </div>
+        <!-- End of Reserve a Spot Container -->
+
+        <!-- Ticket Display -->
+        <div id="ticket">
+            <h2>Ticket</h2>
+            <p><strong>ID:</strong> <span id="ticketID"></span></p>
+            <p><strong>Time:</strong> <span id="ticketTime"></span></p>
+            <p><strong>Price:</strong> <span id="ticketPrice"></span> SRD</p>
+        </div>
+        <!-- End of Ticket Display -->
+
+        <!-- Display Available Spots --
+        <div id="availableSpots">
+            <h2>Available Spots</h2>
+            <p id="spotsCount">6</p>
+        </div>
+        !-- End of Display Available Spots -->
+    </div>
+    <script>
+        var availableSpots = 6; // Initially all spots are available
+        var confirmedReservations = {}; // Object to store confirmed reservations
+        var countdownInterval; // Interval for countdown timer
+
+        // Function to update available spots count
+        function updateAvailableSpots() {
+            document.getElementById('spotsCount').textContent = availableSpots;
+        }
+
+        // Function to start the countdown timer
+        function startCountdown(startTime, endTime) {
+            var startTimeMs = new Date("1970-01-01T" + startTime + "Z").getTime();
+            var endTimeMs = new Date("1970-01-01T" + endTime + "Z").getTime();
+
+            countdownInterval = setInterval(function() {
+                var currentTimeMs = new Date().getTime();
+                var remainingTimeMs = endTimeMs - currentTimeMs;
+                if (remainingTimeMs > 0) {
+                    var hours = Math.floor((remainingTimeMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((remainingTimeMs % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((remainingTimeMs % (1000 * 60)) / 1000);
+                    document.getElementById("timeLeft").value = hours + "h " + minutes + "m " + seconds + "s";
+                } else {
+                    clearInterval(countdownInterval);
+                    document.getElementById("timeLeft").value = "Reservation ended";
+                }
+            }, 1000);
+        }
+
+        // Function to reserve a spot
+        function reserveSpot() {
+            var spot = document.getElementById("spot").value;
+            var startTime = document.getElementById("startTime").value;
+            var endTime = document.getElementById("endTime").value;
+
+            if (spot && startTime && endTime && availableSpots > 0) {
+                availableSpots--;
+                updateAvailableSpots();
+                document.querySelector('option[value="' + spot + '"]').disabled = true;
+                startCountdown(startTime, endTime);
+                console.log("Reservation request sent for spot " + spot);
+            } else {
+                console.log("Please fill in all fields or no available spots");
+            }
+        }
+
+        // Function to cancel reservation
+        function cancelReservation() {
+            clearInterval(countdownInterval);
+            var spot = document.getElementById("spot").value;
+            if (spot) {
+                availableSpots++;
+                updateAvailableSpots();
+                document.querySelector('option[value="' + spot + '"]').disabled = false;
+                document.getElementById("timeLeft").value = "";
+                console.log("Cancel Reservation request sent for spot " + spot);
+            } else {
+                console.log("No spot selected");
+            }
+        }
+        // Function to confirm reservation
+        function confirmReservation() {
+            clearInterval(countdownInterval);
+            var spot = document.getElementById("spot").value;
+            if (spot) {
+                confirmedReservations[spot] = true; // Record the confirmed reservation
+                document.getElementById("ticketID").textContent = generateID();
+                document.getElementById("ticketTime").textContent = document.getElementById("startTime").value + " - " + document.getElementById("endTime").value;
+                document.getElementById("ticketPrice").textContent = calculatePrice(document.getElementById("startTime").value, document.getElementById("endTime").value);
+                document.getElementById("ticket").style.display = "block";
+                document.getElementById("spot").disabled = true;
+                document.getElementById("cancelButton").disabled = true; // Disable the Cancel Reservation button
+                document.getElementById("confirmButton").disabled = true; // Disable the Confirm Reservation button
+                document.getElementById("newReservationButton").style.display = "block"; // Show the New Reservation button
+                console.log("Reservation confirmed for spot " + spot);
+                sendReservationInfo("confirmReservation " + spot + " reserved" );
+                console.log("Confirm Reservation request sent for spot " + spot);
+            } else {
+                console.log("No spot selected");
+            }
+        }
+
+        // Function to generate a unique ID for the reservation
+        function generateID() {
+            return Math.random().toString(36).substr(2, 9); // Example of generating a random ID
+        }
+
+        // Function to calculate the price based on the reservation duration
+        function calculatePrice(startTime, endTime) {
+            var startTimeMs = new Date(startTime).getTime();
+            var endTimeMs = new Date(endTime).getTime();
+            var durationMs = endTimeMs - startTimeMs;
+            var durationMinutes = durationMs / (1000 * 60);
+            var pricePerHalfHour = 20; // Price per half hour
+            var durationinhalfhour = durationMinutes / 30;
+            var totalprice = durationinhalfhour * pricePerHalfHour;// Price for every 30 minutes
+
+            return totalPrice;
+        }
+
+        // Function to start a new reservation
+        function startNewReservation() {
+            document.getElementById("spot").disabled = false;
+            document.getElementById("cancelButton").disabled = false; // Enable the Cancel Reservation button
+            document.getElementById("confirmButton").disabled = false; // Enable the Confirm Reservation button
+            document.getElementById("newReservationButton").style.display = "none"; // Hide the New Reservation button
+            document.getElementById("ticket").style.display = "none"; // Hide the ticket display
+            document.getElementById("timeLeft").value = ""; // Clear the time left
+            document.getElementById("startTime").value = ""; // Clear the start time
+            document.getElementById("endTime").value = ""; // Clear the end time
+        }
+    </script>
+    
+</body>
+</html>

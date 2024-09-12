@@ -1,0 +1,84 @@
+body {
+    background-color: #f1f1f1; /* Light gray background */
+    font-family: Arial, sans-serif; /* Default font */
+}
+
+.topnav {
+    background-color: #4caf50; /* Darker green top navigation bar */
+    padding: 15px;
+    text-align: center;
+}
+
+.topnav h1 {
+    margin: 0;
+    color: white; /* White text */
+}
+
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 300px; /* Adjust width as needed */
+}
+
+.card {
+    background-color: #ffffcc; /* Yellow card background */
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.switch {
+    margin-bottom: 15px;
+}
+
+.slider {
+    width: 100%;
+}
+
+.state {
+    font-size: 14px;
+}
+
+.motor-control {
+    background-color: #4caf50; /* Darker green motor control background */
+    width: 300px; /* Adjust width as needed */
+    margin: 10px;
+    text-align: center;
+    padding: 20px;
+}
+
+.motor-control button {
+    background-color: white; /* White button background */
+    color: #4caf50; /* Darker green button text */
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.sensor-data {
+    background-color: #ffffcc; /* Yellow sensor data background */
+    width: 300px; /* Adjust width as needed */
+    margin: 10px;
+    text-align: center;
+    padding: 20px;
+}
+
+.sensor-data h2 {
+    margin-top: 0;
+}
